@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.UUID;
 
 public class CP {
@@ -14,14 +15,10 @@ public class CP {
     private final HashMap<UUID, Connection> MAIN_POOL = new HashMap<>();
     private final HashMap<UUID, Connection> CONSUMER_POOL = new HashMap<>();
 
-    private  int poolSize;
+    private int poolSize;
 
     public CP() {
-        this(DEFAULT_POOL_SIZE);
-    }
-
-    public CP(int poolSize) {
-        this.poolSize = poolSize;
+        this.poolSize = getConfiguredPoolSize();
         try {
             initializePool();
         } catch (IOException | SQLException | ClassNotFoundException e) {
@@ -31,6 +28,16 @@ public class CP {
     public int getPoolSize() {
         return poolSize;
     }
+
+    private int getConfiguredPoolSize() {
+        ResourceBundle bundle = ResourceBundle.getBundle("application");
+        try {
+            return Integer.parseInt(bundle.getString("app.db.poolSize"));
+        } catch (Exception e) {
+            return DEFAULT_POOL_SIZE;
+        }
+    }
+
     private void initializePool() throws IOException, SQLException, ClassNotFoundException {
         Properties properties = new Properties();
         properties.load(getClass().getResourceAsStream("/application.properties"));
@@ -40,7 +47,6 @@ public class CP {
         String database = properties.getProperty("app.db.database");
         String user = properties.getProperty("app.db.user");
         String password = properties.getProperty("app.db.password");
-
 
         for (int i = 0; i < poolSize; i++) {
             Connection connection = DriverManager.getConnection("jdbc:mysql://%s:%s/%s"
