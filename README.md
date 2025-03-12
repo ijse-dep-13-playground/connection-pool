@@ -28,13 +28,6 @@ This project demonstrates the implementation of a simple connection pool using S
 3. Deploy the WAR file to Apache Tomcat.
 4. Start Tomcat and access the application at `http://localhost:8080/app`.
 
-## Troubleshooting
-### JDBC Connection Cleanup Issue
-If you encounter memory leak warnings related to JDBC drivers during deployment, implement the following fixes:
-1. **Close Database Connections Properly**
-2. **Unregister JDBC Driver in `contextDestroyed()`**
-3. **Stop `AbandonedConnectionCleanupThread`**
-4. **Enable Tomcat’s JDBC Leak Prevention** in `context.xml`
 
 ## License
 This project is open-source and available under the MIT License.
