@@ -12,8 +12,8 @@ import java.util.UUID;
 public class CP {
     private static final int DEFAULT_POOL_SIZE = 5;
 
-    private final HashMap<UUID, Connection> MAIN_POOL = new HashMap<>();
-    private final HashMap<UUID, Connection> CONSUMER_POOL = new HashMap<>();
+    private final HashMap<UUID, Connection> MAIN_POOL = new HashMap<UUID, Connection>();
+    private final HashMap<UUID, Connection> CONSUMER_POOL = new HashMap<UUID, Connection>();
 
     private int poolSize;
 
@@ -47,6 +47,9 @@ public class CP {
         String database = properties.getProperty("app.db.database");
         String user = properties.getProperty("app.db.user");
         String password = properties.getProperty("app.db.password");
+
+        Class.forName("com.mysql.cj.jdbc.Driver");
+
 
         for (int i = 0; i < poolSize; i++) {
             Connection connection = DriverManager.getConnection("jdbc:mysql://%s:%s/%s"

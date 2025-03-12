@@ -5,9 +5,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lk.ijse.dep13.connectionpool.db.CP;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,10 +33,21 @@ public class ReleaseConnectionServlet extends HttpServlet {
         }
     }
     private void releaseConnection(String id, HttpServletResponse resp) throws IOException {
-        System.out.println("ReleaseConnectionServlet");
+        CP connectionPool = (CP) getServletContext().getAttribute("datasource");
+        connectionPool.releaseConnection(UUID.fromString(id.trim()));
+
+
+        resp.setContentType("text/html");
+        PrintWriter out = resp.getWriter();
+        out.println("<h1>Connection id: " + id + " released</h1>");
     }
 
     private void releaseAllConnections(HttpServletResponse resp) throws IOException {
-        System.out.println("ReleaseAllConnectionServlet");
+        CP connectionPool = (CP) getServletContext().getAttribute("datasource");
+        connectionPool.releaseAllConnections();
+
+        resp.setContentType("text/html");
+        PrintWriter out = resp.getWriter();
+        out.println("<h1>All connections released</h1>");
     }
 }
